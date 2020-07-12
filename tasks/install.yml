@@ -31,7 +31,6 @@
     mode: 0770
   with_items:
     - "{{ prometheus_config_dir }}"
-    - "{{ prometheus_config_dir }}/conf.d"
     - "{{ prometheus_config_dir }}/rules"
     - "{{ prometheus_config_dir }}/file_sd"
 
@@ -84,7 +83,9 @@
         - consoles
       notify:
         - restart prometheus
-  when: prometheus_binary_local_dir | length == 0
+  when:
+    - prometheus_binary_local_dir | length == 0
+    - not prometheus_skip_install
 
 - name: propagate locally distributed prometheus and promtool binaries
   copy:
@@ -96,7 +97,9 @@
   with_items:
     - prometheus
     - promtool
-  when: prometheus_binary_local_dir | length > 0
+  when:
+    - prometheus_binary_local_dir | length > 0
+    - not prometheus_skip_install
   notify:
     - restart prometheus
 
@@ -120,7 +123,7 @@
   retries: 5
   delay: 2
   when:
-    - ansible_version.full is version_compare('2.4', '>=')
+    - ansible_version.full is version('2.4', '>=')
     - ansible_selinux.status == "enabled"
 
 - name: Allow prometheus to bind to port in SELinux
@@ -130,5 +133,5 @@
     setype: http_port_t
     state: present
   when:
-    - ansible_version.full is version_compare('2.4', '>=')
+    - ansible_version.full is version('2.4', '>=')
     - ansible_selinux.status == "enabled"

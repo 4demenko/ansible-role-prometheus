@@ -1,6 +1,7 @@
 ---
-prometheus_version: 2.17.1
+prometheus_version: 2.19.2
 prometheus_binary_local_dir: ''
+prometheus_skip_install: false
 
 prometheus_config_dir: /etc/prometheus
 prometheus_db_dir: /var/lib/prometheus
@@ -22,7 +23,7 @@ prometheus_config_flags_extra: {}
 prometheus_alertmanager_config: []
 # prometheus_alertmanager_config:
 #   - scheme: https
-#     path_prefix: /alertmanager
+#     path_prefix: alertmanager/
 #     basic_auth:
 #       username: user
 #       password: pass
